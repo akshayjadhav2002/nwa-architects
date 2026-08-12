@@ -4,6 +4,7 @@ import { initialProjects, initialJobs, initialApplications, initialSettings, ini
 import { TopNavBar } from './components/TopNavBar';
 import { SideNavBar, AdminView } from './components/SideNavBar';
 import { Footer } from './components/Footer';
+import { AdminLoginModal } from './components/AdminLoginModal';
 
 // Views
 import { PortfolioView } from './views/PortfolioView';
@@ -24,6 +25,12 @@ export function App() {
   const [activeTab, setActiveTab] = useState<PublicTab>('portfolio');
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   const [adminView, setAdminView] = useState<AdminView>('dashboard');
+
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('nwa_admin_auth') === 'true';
+  });
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   // Application Data State
   const [projects, setProjects] = useState<Project[]>(initialProjects);
@@ -58,12 +65,30 @@ export function App() {
   // Handlers
   const handlePublicNavigate = (tab: PublicTab | 'admin') => {
     if (tab === 'admin') {
-      setIsAdminMode(true);
-      setAdminView('dashboard');
+      if (isAuthenticated) {
+        setIsAdminMode(true);
+        setAdminView('dashboard');
+      } else {
+        setIsLoginModalOpen(true);
+      }
     } else {
       setIsAdminMode(false);
       setActiveTab(tab);
     }
+  };
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    sessionStorage.setItem('nwa_admin_auth', 'true');
+    setIsLoginModalOpen(false);
+    setIsAdminMode(true);
+    setAdminView('dashboard');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('nwa_admin_auth');
+    setIsAdminMode(false);
   };
 
   // Projects Handlers
@@ -219,10 +244,10 @@ export function App() {
           <div className="md:hidden bg-[#000000] text-white p-4 flex justify-between items-center sticky top-0 z-50">
             <span className="font-serif font-bold text-lg">Studio Admin</span>
             <button
-              onClick={() => setIsAdminMode(false)}
-              className="text-xs label-caps uppercase bg-white/10 px-3 py-1.5 rounded"
+              onClick={handleLogout}
+              className="text-xs label-caps uppercase bg-white/10 px-3 py-1.5 rounded hover:bg-[#a33e00] transition-colors"
             >
-              Exit Portal
+              Sign Out
             </button>
           </div>
 
@@ -230,7 +255,7 @@ export function App() {
           <SideNavBar
             currentView={adminView}
             onNavigate={(view) => setAdminView(view)}
-            onExitAdmin={() => setIsAdminMode(false)}
+            onExitAdmin={handleLogout}
           />
 
           {/* Admin Content Screen */}
@@ -306,6 +331,13 @@ export function App() {
           <Footer />
         </div>
       )}
+
+      {/* Admin Login Modal Flow */}
+      <AdminLoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </div>
   );
 }
