@@ -39,6 +39,9 @@ export function App() {
   const [inquiries, setInquiries] = useState<ContactInquiry[]>(initialInquiries);
   const [settings, setSettings] = useState<StudioSettings>(initialSettings);
 
+  // Selected Job Filter for Applications view
+  const [selectedJobFilter, setSelectedJobFilter] = useState<string | null>(null);
+
   // Fetch initial data from server REST API if available
   useEffect(() => {
     fetch('/api/projects')
@@ -167,7 +170,31 @@ export function App() {
     position: string;
     portfolioUrl: string;
     coverLetter: string;
+    resumeName?: string;
+    resumeUrl?: string;
+    experienceSummary?: Array<{
+      role: string;
+      company: string;
+      period: string;
+      description?: string;
+    }>;
   }) => {
+    const attachments = [];
+    if (appData.resumeName) {
+      attachments.push({
+        name: appData.resumeName,
+        url: appData.resumeUrl || '#',
+        type: 'Resume / CV',
+      });
+    } else {
+      attachments.push({ name: 'Resume.pdf', url: '#', type: 'PDF Document' });
+    }
+
+    const expSummary =
+      appData.experienceSummary && appData.experienceSummary.length > 0
+        ? appData.experienceSummary
+        : [{ role: 'Applicant', company: 'Portfolio & CV Submission', period: 'Current' }];
+
     const newApp: Application = {
       id: `app-${Date.now()}`,
       candidateName: appData.candidateName,
@@ -177,10 +204,8 @@ export function App() {
       email: appData.email,
       portfolioUrl: appData.portfolioUrl,
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-      experienceSummary: [
-        { role: 'Applicant', company: 'Portfolio Submission', period: 'Current' },
-      ],
-      attachments: [{ name: 'Resume.pdf', url: '#', type: 'PDF Document' }],
+      experienceSummary: expSummary,
+      attachments,
       notes: appData.coverLetter ? `Cover Letter: ${appData.coverLetter}` : '',
     };
 
@@ -281,15 +306,23 @@ export function App() {
             {adminView === 'jobs' && (
               <AdminJobs
                 jobs={jobs}
+                applications={applications}
                 onAddJob={handleAddJob}
                 onUpdateJob={handleUpdateJob}
                 onDeleteJob={handleDeleteJob}
+                onViewApplications={(jobTitle) => {
+                  setSelectedJobFilter(jobTitle);
+                  setAdminView('applications');
+                }}
               />
             )}
 
             {adminView === 'applications' && (
               <AdminApplications
                 applications={applications}
+                jobs={jobs}
+                selectedJobFilter={selectedJobFilter}
+                onClearJobFilter={() => setSelectedJobFilter(null)}
                 onUpdateApplication={handleUpdateApplication}
               />
             )}

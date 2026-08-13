@@ -1,21 +1,65 @@
-import React, { useState } from 'react';
-import { Application } from '../../types';
+import React, { useState, useEffect } from 'react';
+import { Application, JobPosting } from '../../types';
 
 interface AdminApplicationsProps {
   applications: Application[];
+  jobs?: JobPosting[];
+  selectedJobFilter?: string | null;
+  onClearJobFilter?: () => void;
   onUpdateApplication: (app: Application) => void;
 }
 
 export const AdminApplications: React.FC<AdminApplicationsProps> = ({
   applications,
+  jobs = [],
+  selectedJobFilter,
+  onClearJobFilter,
   onUpdateApplication,
 }) => {
-  const [selectedId, setSelectedId] = useState<string>(applications[0]?.id || '');
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string>(selectedJobFilter || 'All');
+  const [selectedId, setSelectedId] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('All');
   const [noteText, setNoteText] = useState('');
 
-  const currentApp = applications.find((a) => a.id === selectedId) || applications[0];
+  // Sync internal state when prop changes
+  useEffect(() => {
+    if (selectedJobFilter) {
+      setSelectedJobTitle(selectedJobFilter);
+    } else {
+      setSelectedJobTitle('All');
+    }
+  }, [selectedJobFilter]);
+
+  // Derive unique position titles for filter dropdown
+  const positionSet = new Set<string>();
+  applications.forEach((a) => positionSet.add(a.position));
+  jobs.forEach((j) => positionSet.add(j.title));
+  const uniquePositions = Array.from(positionSet);
+
+  const activeJob = selectedJobFilter || (selectedJobTitle !== 'All' ? selectedJobTitle : null);
+
+  const filteredApps = applications.filter((app) => {
+    const matchesSearch =
+      app.candidateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.position.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === 'All' || app.status === filterStatus;
+    const matchesJob =
+      !activeJob ||
+      app.position.toLowerCase().includes(activeJob.toLowerCase()) ||
+      activeJob.toLowerCase().includes(app.position.toLowerCase());
+
+    return matchesSearch && matchesStatus && matchesJob;
+  });
+
+  // Keep a valid candidate selected
+  const currentApp = filteredApps.find((a) => a.id === selectedId) || filteredApps[0];
+
+  useEffect(() => {
+    if (filteredApps.length > 0 && !filteredApps.some((a) => a.id === selectedId)) {
+      setSelectedId(filteredApps[0].id);
+    }
+  }, [filteredApps, selectedId]);
 
   const handleStatusChange = (newStatus: Application['status']) => {
     if (currentApp) {
@@ -38,22 +82,59 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
     }
   };
 
-  const filteredApps = applications.filter((app) => {
-    const matchesSearch =
-      app.candidateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.position.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'All' || app.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
-
   return (
     <div className="flex-1 flex flex-col h-full bg-[#f8f9fa] overflow-hidden">
       {/* Header */}
-      <header className="h-20 shrink-0 flex items-center px-6 md:px-20 border-b border-[#747878]/15 bg-[#f8f9fa]">
-        <h2 className="font-serif text-3xl font-bold text-[#000000]">
-          Application Review
-        </h2>
+      <header className="h-20 shrink-0 flex items-center justify-between px-6 md:px-20 border-b border-[#747878]/15 bg-[#f8f9fa]">
+        <div>
+          <h2 className="font-serif text-3xl font-bold text-[#000000]">
+            Application Review
+          </h2>
+          {activeJob && (
+            <p className="text-xs text-[#a33e00] font-sans font-medium">
+              Job Post: {activeJob}
+            </p>
+          )}
+        </div>
+
+        {activeJob && onClearJobFilter && (
+          <button
+            onClick={() => {
+              onClearJobFilter();
+              setSelectedJobTitle('All');
+            }}
+            className="px-3 py-1.5 bg-[#000000] text-white hover:bg-[#a33e00] text-xs label-caps transition-colors flex items-center gap-1.5"
+          >
+            <span className="material-symbols-outlined text-sm">clear_all</span>
+            <span>Show All Jobs ({applications.length})</span>
+          </button>
+        )}
       </header>
+
+      {/* Active Filter Banner */}
+      {activeJob && (
+        <div className="bg-[#e1e3e4] px-6 md:px-20 py-2.5 border-b border-[#747878]/20 flex items-center justify-between text-xs text-[#000000]">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base text-[#a33e00]">work</span>
+            <span>
+              Showing applications received for job post: <strong className="text-[#000000]">"{activeJob}"</strong> ({filteredApps.length} candidate{filteredApps.length !== 1 ? 's' : ''})
+            </span>
+          </div>
+          {onClearJobFilter && (
+            <button
+              type="button"
+              onClick={() => {
+                onClearJobFilter();
+                setSelectedJobTitle('All');
+              }}
+              className="label-caps text-[#a33e00] hover:underline font-bold text-[11px] uppercase flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-xs">close</span>
+              <span>Clear Job Filter</span>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Master-Detail Layout */}
       <div className="flex-1 flex overflow-hidden">
@@ -74,28 +155,65 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
               />
             </div>
 
-            <div className="flex items-center justify-between text-xs label-caps text-[#444748]">
-              <span>Filter Status:</span>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="bg-transparent border-0 border-b border-[#747878]/30 text-xs text-[#000000] focus:ring-0 cursor-pointer"
-              >
-                <option value="All">All</option>
-                <option value="Reviewing">Reviewing</option>
-                <option value="New">New</option>
-                <option value="Interview">Interview</option>
-                <option value="Hired">Hired</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+            <div className="grid grid-cols-2 gap-2 text-xs label-caps text-[#444748]">
+              <div className="flex flex-col gap-1">
+                <span>Job Post:</span>
+                <select
+                  value={activeJob || 'All'}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === 'All') {
+                      if (onClearJobFilter) onClearJobFilter();
+                      setSelectedJobTitle('All');
+                    } else {
+                      setSelectedJobTitle(val);
+                    }
+                  }}
+                  className="bg-transparent border-0 border-b border-[#747878]/30 text-xs text-[#000000] focus:ring-0 cursor-pointer w-full truncate"
+                >
+                  <option value="All">All Jobs</option>
+                  {uniquePositions.map((pos) => (
+                    <option key={pos} value={pos}>
+                      {pos}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <span>Status:</span>
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="bg-transparent border-0 border-b border-[#747878]/30 text-xs text-[#000000] focus:ring-0 cursor-pointer w-full"
+                >
+                  <option value="All">All</option>
+                  <option value="Reviewing">Reviewing</option>
+                  <option value="New">New</option>
+                  <option value="Interview">Interview</option>
+                  <option value="Hired">Hired</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
             </div>
           </div>
 
           {/* List */}
           <div className="flex-1 overflow-y-auto custom-scrollbar divide-y divide-[#747878]/10">
             {filteredApps.length === 0 ? (
-              <div className="p-8 text-center text-sm text-[#444748]">
-                No applications match your query.
+              <div className="p-8 text-center text-sm text-[#444748] space-y-3">
+                <p>No applications match this filter.</p>
+                {activeJob && onClearJobFilter && (
+                  <button
+                    onClick={() => {
+                      onClearJobFilter();
+                      setSelectedJobTitle('All');
+                    }}
+                    className="text-xs label-caps text-[#a33e00] hover:underline font-bold uppercase block mx-auto"
+                  >
+                    View All Applications
+                  </button>
+                )}
               </div>
             ) : (
               filteredApps.map((app) => {

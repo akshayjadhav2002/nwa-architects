@@ -28,6 +28,10 @@ export const Footer: React.FC = () => {
               Privacy
             </a>
           </nav>
+
+          <p className="text-xs text-white/60 label-caps tracking-wider">
+            Designed and Developed by <span className="text-white font-semibold">Akshay Jadhav</span>
+          </p>
         </div>
       </div>
     </footer>

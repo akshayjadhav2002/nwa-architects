@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { JobPosting } from '../../types';
+import { JobPosting, Application } from '../../types';
 
 interface AdminJobsProps {
   jobs: JobPosting[];
+  applications?: Application[];
   onAddJob: (j: Omit<JobPosting, 'id' | 'postedDate'>) => void;
   onUpdateJob: (j: JobPosting) => void;
   onDeleteJob: (id: string) => void;
+  onViewApplications?: (jobTitle: string) => void;
 }
 
 export const AdminJobs: React.FC<AdminJobsProps> = ({
   jobs,
+  applications = [],
   onAddJob,
   onUpdateJob,
   onDeleteJob,
+  onViewApplications,
 }) => {
   const [searchTerm, setSearchText] = useState('');
   const [selectedDept, setSelectedDepartment] = useState<string>('All');
@@ -167,7 +171,7 @@ export const AdminJobs: React.FC<AdminJobsProps> = ({
       {/* Data Table */}
       <div className="w-full">
         {/* Table Header */}
-        <div className="hidden md:grid grid-cols-12 gap-8 py-4 border-b border-[#747878]/15 label-caps text-[#444748]">
+        <div className="hidden md:grid grid-cols-12 gap-6 py-4 border-b border-[#747878]/15 label-caps text-[#444748]">
           <div className="col-span-4">Job Title</div>
           <div className="col-span-2">Department</div>
           <div className="col-span-2">Location</div>
@@ -182,65 +186,81 @@ export const AdminJobs: React.FC<AdminJobsProps> = ({
               No job postings found.
             </div>
           ) : (
-            filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 py-6 items-center hover:bg-[#f3f4f5] transition-colors px-4 -mx-4 group"
-              >
-                <div className="col-span-1 md:col-span-4">
-                  <h3 className="font-serif text-xl font-bold text-[#000000] mb-1">
-                    {job.title}
-                  </h3>
-                  <p className="text-xs text-[#444748]">Posted: {job.postedDate}</p>
-                </div>
+            filteredJobs.map((job) => {
+              return (
+                <div
+                  key={job.id}
+                  onClick={() => onViewApplications && onViewApplications(job.title)}
+                  className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 py-6 items-center hover:bg-[#f3f4f5] transition-colors px-4 -mx-4 group cursor-pointer"
+                >
+                  <div className="col-span-1 md:col-span-4">
+                    <h3 className="font-serif text-xl font-bold text-[#000000] group-hover:text-[#a33e00] transition-colors mb-1 flex items-center gap-2">
+                      <span>{job.title}</span>
+                      <span className="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity text-[#a33e00]">
+                        arrow_forward
+                      </span>
+                    </h3>
+                    <p className="text-xs text-[#444748]">Posted: {job.postedDate}</p>
+                  </div>
 
-                <div className="col-span-1 md:col-span-2 flex items-center">
-                  <span className="text-base text-[#000000]">{job.department}</span>
-                </div>
+                  <div className="col-span-1 md:col-span-2 flex items-center">
+                    <span className="text-base text-[#000000]">{job.department}</span>
+                  </div>
 
-                <div className="col-span-1 md:col-span-2 flex items-center">
-                  <span className="text-base text-[#000000]">{job.location}</span>
-                </div>
+                  <div className="col-span-1 md:col-span-2 flex items-center">
+                    <span className="text-base text-[#000000]">{job.location}</span>
+                  </div>
 
-                <div className="col-span-1 md:col-span-2 flex items-center">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 label-caps rounded-sm text-[10px] ${
-                      job.status === 'Active'
-                        ? 'bg-[#e1e3e4] text-[#000000] font-bold'
-                        : job.status === 'Draft'
-                        ? 'border border-[#747878]/30 text-[#444748]'
-                        : 'bg-[#ffdad6] text-[#ba1a1a]'
-                    }`}
-                  >
-                    {job.status}
-                  </span>
-                </div>
+                  <div className="col-span-1 md:col-span-2 flex items-center">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 label-caps rounded-sm text-[10px] ${
+                        job.status === 'Active'
+                          ? 'bg-[#e1e3e4] text-[#000000] font-bold'
+                          : job.status === 'Draft'
+                          ? 'border border-[#747878]/30 text-[#444748]'
+                          : 'bg-[#ffdad6] text-[#ba1a1a]'
+                      }`}
+                    >
+                      {job.status}
+                    </span>
+                  </div>
 
-                <div className="col-span-1 md:col-span-2 flex items-center md:justify-end space-x-4">
-                  <button
-                    onClick={() => openEditModal(job)}
-                    className="text-[#444748] hover:text-[#000000] transition-colors"
-                    title="Edit role"
-                  >
-                    <span className="material-symbols-outlined text-base">edit</span>
-                  </button>
-                  <button
-                    onClick={() => handleDuplicate(job)}
-                    className="text-[#444748] hover:text-[#000000] transition-colors"
-                    title="Duplicate role"
-                  >
-                    <span className="material-symbols-outlined text-base">content_copy</span>
-                  </button>
-                  <button
-                    onClick={() => onDeleteJob(job.id)}
-                    className="text-[#444748] hover:text-[#ba1a1a] transition-colors"
-                    title="Delete role"
-                  >
-                    <span className="material-symbols-outlined text-base">archive</span>
-                  </button>
+                  {/* Actions */}
+                  <div className="col-span-1 md:col-span-2 flex items-center md:justify-end space-x-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEditModal(job);
+                      }}
+                      className="text-[#444748] hover:text-[#000000] transition-colors p-1"
+                      title="Edit role"
+                    >
+                      <span className="material-symbols-outlined text-base">edit</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDuplicate(job);
+                      }}
+                      className="text-[#444748] hover:text-[#000000] transition-colors p-1"
+                      title="Duplicate role"
+                    >
+                      <span className="material-symbols-outlined text-base">content_copy</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteJob(job.id);
+                      }}
+                      className="text-[#444748] hover:text-[#ba1a1a] transition-colors p-1"
+                      title="Delete role"
+                    >
+                      <span className="material-symbols-outlined text-base">delete</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

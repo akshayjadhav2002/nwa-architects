@@ -51,7 +51,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ onNavigate }) => {
               <img
                 src="https://lh3.googleusercontent.com/aida/AP1WRLvQYCCg0YpnnY5RE3_9Xus1JFW4_9LMJIc2uYD6bu25EIo41IQjcrLJElGoPFP2UvYSzvHxczlil_4sEAK50HiCDrZ3I4decNpZuTZfktXxFe4oBwWQAg73ZKEsOsWzdLW8Cil-zONos8yvLlXBMJ6TKYRx4NrgUwQDIGuT16CFRqDRSRtB6PNtwwl9eGyxnSb768lfZIiCL2JC2Z5tQTuRIBgHTheYusotS2a2xlZe67KROqHh2V-ikL0O"
                 alt="Nilesh Waman"
-                className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -68,7 +68,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ onNavigate }) => {
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5Lpy-7SXTTLhZUGZxqA5CivxY-CiWQw3GmczSXMvSg3AmDS5ic_jMJMStroDLeIthX0C1BJrI4ErZUTbXrOxUrfRVJZORGd1j1Cu5nEIjb-jFWM0tBvRdyaQiVD-a3cGlWWa29U-kfqltdsI6g4W4SRPkMdt_sYF5SHtROvSteznw5rqVsjY4IXdGpupztmARu4E5edAzMLoiSkP12LoOTY2eLvBQE0muwetf6OeQlW0553hGfoFeQA"
                 alt="Sarah Lin"
-                className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -85,7 +85,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ onNavigate }) => {
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf29n-aPIJ2B19jBLqEqy5mCoWFvPRz39qJymMPlNSdWkGBk0o5lMbXU25ykCc6HIBW3F1O5ytTwQ3r2ujJdq3y41B0VbHuHY__z7DY7yyFR196YmRrD0Z0VXHj3T7_ovPpX_ZJkXwSQrQoVuhvgUVlJyfGmW2RlsTl0KNgnnhSpz9b9NXAAJGr7w2Y9k4pK81UAEqF39o2Zn2RmNoJCxgIo42p_IQSAulnMrp5c27xcYKgbohJ4_I0w"
                 alt="Marcus Thorne"
-                className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
             </div>

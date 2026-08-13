@@ -10,6 +10,14 @@ interface CareersViewProps {
     position: string;
     portfolioUrl: string;
     coverLetter: string;
+    resumeName?: string;
+    resumeUrl?: string;
+    experienceSummary?: Array<{
+      role: string;
+      company: string;
+      period: string;
+      description?: string;
+    }>;
   }) => void;
 }
 
