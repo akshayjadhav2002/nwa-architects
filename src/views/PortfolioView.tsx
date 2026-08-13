@@ -64,7 +64,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({ projects, onNaviga
     if (isPaused) return;
     const timer = setInterval(() => {
       nextSlide();
-    }, 5000);
+    }, 3000);
     return () => clearInterval(timer);
   }, [isPaused, nextSlide]);
 
