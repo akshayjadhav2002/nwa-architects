@@ -137,6 +137,76 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate }) => {
         </div>
       </section>
 
+      {/* Our Services Section */}
+      <section className="border-b border-[#747878]/15 pb-16">
+        <div className="mb-12 text-center max-w-2xl mx-auto">
+          <span className="label-caps text-[#a33e00] font-bold uppercase tracking-widest block mb-2">
+            Professional Practice
+          </span>
+          <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#000000]">
+            Our Services
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="p-8 bg-white border border-[#747878]/20 space-y-4 hover:border-[#a33e00] transition-colors group">
+            <div className="w-12 h-12 bg-[#f3f4f5] border border-[#747878]/20 flex items-center justify-center group-hover:bg-[#a33e00] group-hover:text-white group-hover:border-[#a33e00] transition-colors">
+              <span className="material-symbols-outlined text-2xl text-[#a33e00] group-hover:text-white">
+                architecture
+              </span>
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-[#000000]">
+              Building Design
+            </h3>
+            <p className="text-base text-[#444748] leading-relaxed">
+              Introducing NWA Architects, where visionary building design comes to life. Our experienced team is dedicated to transforming your vision into reality, creating inspiring spaces.
+            </p>
+          </div>
+
+          <div className="p-8 bg-white border border-[#747878]/20 space-y-4 hover:border-[#a33e00] transition-colors group">
+            <div className="w-12 h-12 bg-[#f3f4f5] border border-[#747878]/20 flex items-center justify-center group-hover:bg-[#a33e00] group-hover:text-white group-hover:border-[#a33e00] transition-colors">
+              <span className="material-symbols-outlined text-2xl text-[#a33e00] group-hover:text-white">
+                engineering
+              </span>
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-[#000000]">
+              Periodic Site Supervisions
+            </h3>
+            <p className="text-base text-[#444748] leading-relaxed">
+              Welcome to NWA Architects, your trusted partner for comprehensive site supervision services. With our experienced team of architects, we are committed to ensuring that your construction project is executed to the highest standards.
+            </p>
+          </div>
+
+          <div className="p-8 bg-white border border-[#747878]/20 space-y-4 hover:border-[#a33e00] transition-colors group">
+            <div className="w-12 h-12 bg-[#f3f4f5] border border-[#747878]/20 flex items-center justify-center group-hover:bg-[#a33e00] group-hover:text-white group-hover:border-[#a33e00] transition-colors">
+              <span className="material-symbols-outlined text-2xl text-[#a33e00] group-hover:text-white">
+                verified_user
+              </span>
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-[#000000]">
+              Statutory Compliances
+            </h3>
+            <p className="text-base text-[#444748] leading-relaxed">
+              Welcome to NWA Architects, where we prioritize statutory compliance for your building projects. Our experienced team ensures that your designs adhere to all necessary regulations.
+            </p>
+          </div>
+
+          <div className="p-8 bg-white border border-[#747878]/20 space-y-4 hover:border-[#a33e00] transition-colors group">
+            <div className="w-12 h-12 bg-[#f3f4f5] border border-[#747878]/20 flex items-center justify-center group-hover:bg-[#a33e00] group-hover:text-white group-hover:border-[#a33e00] transition-colors">
+              <span className="material-symbols-outlined text-2xl text-[#a33e00] group-hover:text-white">
+                request_quote
+              </span>
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-[#000000]">
+              Estimate, Bill Checking & Tendering
+            </h3>
+            <p className="text-base text-[#444748] leading-relaxed">
+              Welcome to NWA Architects, your trusted partner for professional bill checking services. We understand the importance of accurate and fair financial transactions in your construction project.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action Banner */}
       <section className="bg-[#000000] text-white p-8 md:p-14 text-center space-y-6">
         <h2 className="font-serif text-2xl md:text-4xl font-bold max-w-3xl mx-auto leading-relaxed">
