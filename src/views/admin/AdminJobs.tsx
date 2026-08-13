@@ -8,6 +8,7 @@ interface AdminJobsProps {
   onUpdateJob: (j: JobPosting) => void;
   onDeleteJob: (id: string) => void;
   onViewApplications?: (jobTitle: string) => void;
+  onNavigate?: (view: 'dashboard' | 'projects' | 'jobs' | 'applications' | 'settings') => void;
 }
 
 export const AdminJobs: React.FC<AdminJobsProps> = ({
@@ -17,6 +18,7 @@ export const AdminJobs: React.FC<AdminJobsProps> = ({
   onUpdateJob,
   onDeleteJob,
   onViewApplications,
+  onNavigate,
 }) => {
   const [searchTerm, setSearchText] = useState('');
   const [selectedDept, setSelectedDepartment] = useState<string>('All');
@@ -104,6 +106,16 @@ export const AdminJobs: React.FC<AdminJobsProps> = ({
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#747878]/15 pb-8 gap-6">
         <div>
+          {onNavigate && (
+            <button
+              type="button"
+              onClick={() => onNavigate('dashboard')}
+              className="md:hidden inline-flex items-center gap-1.5 text-xs label-caps font-bold text-[#a33e00] hover:text-[#000000] mb-3 transition-colors uppercase tracking-wider"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              <span>Back to Dashboard</span>
+            </button>
+          )}
           <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#000000] mb-2">
             Job Postings
           </h2>

@@ -4,11 +4,13 @@ import { StudioSettings, TeamMember } from '../../types';
 interface AdminSettingsProps {
   settings: StudioSettings;
   onUpdateSettings: (newSettings: StudioSettings) => void;
+  onNavigate?: (view: 'dashboard' | 'projects' | 'jobs' | 'applications' | 'settings') => void;
 }
 
 export const AdminSettings: React.FC<AdminSettingsProps> = ({
   settings,
   onUpdateSettings,
+  onNavigate,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'profile' | 'team' | 'security'>('profile');
 
@@ -94,6 +96,16 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
     <div className="flex-1 flex flex-col h-full bg-[#f8f9fa] overflow-hidden">
       {/* Header */}
       <header className="px-6 md:px-20 py-8 border-b border-[#747878]/15 bg-[#f8f9fa] shrink-0">
+        {onNavigate && (
+          <button
+            type="button"
+            onClick={() => onNavigate('dashboard')}
+            className="md:hidden inline-flex items-center gap-1.5 text-xs label-caps font-bold text-[#a33e00] hover:text-[#000000] mb-3 transition-colors uppercase tracking-wider"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            <span>Back to Dashboard</span>
+          </button>
+        )}
         <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#000000] mb-2">
           Studio Settings
         </h2>

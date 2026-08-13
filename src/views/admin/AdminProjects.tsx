@@ -6,6 +6,7 @@ interface AdminProjectsProps {
   onAddProject: (p: Omit<Project, 'id' | 'lastEdited' | 'editedBy'>) => void;
   onUpdateProject: (p: Project) => void;
   onDeleteProject: (id: string) => void;
+  onNavigate?: (view: 'dashboard' | 'projects' | 'jobs' | 'applications' | 'settings') => void;
 }
 
 export const AdminProjects: React.FC<AdminProjectsProps> = ({
@@ -13,6 +14,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({
   onAddProject,
   onUpdateProject,
   onDeleteProject,
+  onNavigate,
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
@@ -90,8 +92,18 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({
   return (
     <div className="flex-1 flex flex-col h-full bg-[#f8f9fa] overflow-hidden">
       {/* Page Header */}
-      <header className="flex justify-between items-end px-6 md:px-20 py-8 border-b border-[#747878]/15 shrink-0 bg-[#f8f9fa]">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end px-6 md:px-20 py-8 border-b border-[#747878]/15 shrink-0 bg-[#f8f9fa] gap-4">
         <div>
+          {onNavigate && (
+            <button
+              type="button"
+              onClick={() => onNavigate('dashboard')}
+              className="md:hidden inline-flex items-center gap-1.5 text-xs label-caps font-bold text-[#a33e00] hover:text-[#000000] mb-2 transition-colors uppercase tracking-wider"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              <span>Back to Dashboard</span>
+            </button>
+          )}
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#000000] mb-2">
             Project Management
           </h2>

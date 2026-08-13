@@ -7,6 +7,7 @@ interface AdminApplicationsProps {
   selectedJobFilter?: string | null;
   onClearJobFilter?: () => void;
   onUpdateApplication: (app: Application) => void;
+  onNavigate?: (view: 'dashboard' | 'projects' | 'jobs' | 'applications' | 'settings') => void;
 }
 
 export const AdminApplications: React.FC<AdminApplicationsProps> = ({
@@ -15,12 +16,14 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
   selectedJobFilter,
   onClearJobFilter,
   onUpdateApplication,
+  onNavigate,
 }) => {
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>(selectedJobFilter || 'All');
   const [selectedId, setSelectedId] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('All');
   const [noteText, setNoteText] = useState('');
+  const [showMobileDetail, setShowMobileDetail] = useState<boolean>(false);
 
   // Sync internal state when prop changes
   useEffect(() => {
@@ -85,9 +88,19 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
   return (
     <div className="flex-1 flex flex-col h-full bg-[#f8f9fa] overflow-hidden">
       {/* Header */}
-      <header className="h-20 shrink-0 flex items-center justify-between px-6 md:px-20 border-b border-[#747878]/15 bg-[#f8f9fa]">
+      <header className="min-h-16 py-3 sm:py-4 shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 md:px-12 lg:px-20 border-b border-[#747878]/15 bg-[#f8f9fa] gap-3">
         <div>
-          <h2 className="font-serif text-3xl font-bold text-[#000000]">
+          {onNavigate && (
+            <button
+              type="button"
+              onClick={() => onNavigate('dashboard')}
+              className="md:hidden inline-flex items-center gap-1.5 text-xs label-caps font-bold text-[#a33e00] hover:text-[#000000] mb-1 transition-colors uppercase tracking-wider"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              <span>Back to Dashboard</span>
+            </button>
+          )}
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#000000]">
             Application Review
           </h2>
           {activeJob && (
@@ -103,7 +116,7 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
               onClearJobFilter();
               setSelectedJobTitle('All');
             }}
-            className="px-3 py-1.5 bg-[#000000] text-white hover:bg-[#a33e00] text-xs label-caps transition-colors flex items-center gap-1.5"
+            className="px-3 py-1.5 bg-[#000000] text-white hover:bg-[#a33e00] text-xs label-caps transition-colors flex items-center gap-1.5 shrink-0"
           >
             <span className="material-symbols-outlined text-sm">clear_all</span>
             <span>Show All Jobs ({applications.length})</span>
@@ -113,7 +126,7 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
 
       {/* Active Filter Banner */}
       {activeJob && (
-        <div className="bg-[#e1e3e4] px-6 md:px-20 py-2.5 border-b border-[#747878]/20 flex items-center justify-between text-xs text-[#000000]">
+        <div className="bg-[#e1e3e4] px-4 sm:px-6 md:px-12 lg:px-20 py-2.5 border-b border-[#747878]/20 flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-[#000000] gap-2">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-base text-[#a33e00]">work</span>
             <span>
@@ -127,7 +140,7 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
                 onClearJobFilter();
                 setSelectedJobTitle('All');
               }}
-              className="label-caps text-[#a33e00] hover:underline font-bold text-[11px] uppercase flex items-center gap-1"
+              className="label-caps text-[#a33e00] hover:underline font-bold text-[11px] uppercase flex items-center gap-1 shrink-0"
             >
               <span className="material-symbols-outlined text-xs">close</span>
               <span>Clear Job Filter</span>
@@ -137,9 +150,13 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
       )}
 
       {/* Master-Detail Layout */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Left: Candidate List (Master) */}
-        <section className="w-full md:w-80 lg:w-96 flex flex-col border-r border-[#747878]/15 bg-[#f8f9fa]">
+        <section
+          className={`w-full md:w-80 lg:w-96 flex flex-col border-r border-[#747878]/15 bg-[#f8f9fa] shrink-0 ${
+            showMobileDetail ? 'hidden md:flex' : 'flex'
+          }`}
+        >
           {/* Filters & Search */}
           <div className="p-4 border-b border-[#747878]/15 flex flex-col gap-3">
             <div className="relative flex-1">
@@ -221,19 +238,22 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
                 return (
                   <div
                     key={app.id}
-                    onClick={() => setSelectedId(app.id)}
-                    className={`p-6 cursor-pointer transition-colors ${
+                    onClick={() => {
+                      setSelectedId(app.id);
+                      setShowMobileDetail(true);
+                    }}
+                    className={`p-4 sm:p-5 md:p-6 cursor-pointer transition-colors ${
                       isSelected
                         ? 'bg-[#edeeef] border-l-4 border-[#000000]'
                         : 'hover:bg-[#f3f4f5]'
                     }`}
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-base text-[#000000]">
+                    <div className="flex justify-between items-start mb-2 gap-2">
+                      <h3 className="font-semibold text-sm sm:text-base text-[#000000] truncate">
                         {app.candidateName}
                       </h3>
                       <span
-                        className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded label-caps ${
+                        className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded label-caps shrink-0 ${
                           app.status === 'Reviewing'
                             ? 'bg-[#a33e00]/10 text-[#a33e00]'
                             : app.status === 'New'
@@ -248,8 +268,8 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
                         {app.status}
                       </span>
                     </div>
-                    <p className="text-sm text-[#444748] mb-1">{app.position}</p>
-                    <p className="text-xs text-[#747878]">Applied: {app.appliedDate}</p>
+                    <p className="text-xs sm:text-sm text-[#444748] mb-1 truncate">{app.position}</p>
+                    <p className="text-[11px] text-[#747878]">Applied: {app.appliedDate}</p>
                   </div>
                 );
               })
@@ -259,32 +279,46 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
 
         {/* Right: Candidate Profile (Detail) */}
         {currentApp ? (
-          <section className="flex-1 overflow-y-auto custom-scrollbar bg-[#f8f9fa] p-8 md:p-12">
-            <div className="max-w-3xl mx-auto space-y-12">
+          <section
+            className={`flex-1 overflow-y-auto custom-scrollbar bg-[#f8f9fa] p-4 sm:p-6 md:p-10 lg:p-12 ${
+              showMobileDetail ? 'block' : 'hidden md:block'
+            }`}
+          >
+            <div className="max-w-3xl mx-auto space-y-8 sm:space-y-12">
+              {/* Mobile Back Button to Candidates List */}
+              <button
+                type="button"
+                onClick={() => setShowMobileDetail(false)}
+                className="md:hidden inline-flex items-center gap-1.5 text-xs label-caps font-bold text-[#a33e00] hover:text-[#000000] transition-colors uppercase tracking-wider bg-white border border-[#747878]/20 px-3 py-2 shadow-sm"
+              >
+                <span className="material-symbols-outlined text-base">arrow_back</span>
+                <span>Back to Candidate List</span>
+              </button>
+
               {/* Profile Header */}
-              <div className="flex flex-col sm:flex-row items-start gap-8">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
                 <img
                   src={currentApp.avatarUrl}
                   alt={currentApp.candidateName}
-                  className="w-32 h-32 object-cover rounded-sm grayscale border border-[#747878]/20"
+                  className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-sm grayscale border border-[#747878]/20 shrink-0"
                   referrerPolicy="no-referrer"
                 />
-                <div className="flex-1 space-y-2">
-                  <h2 className="font-serif text-4xl font-bold text-[#000000]">
+                <div className="flex-1 space-y-2 min-w-0">
+                  <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#000000] break-words">
                     {currentApp.candidateName}
                   </h2>
-                  <p className="font-serif italic text-lg text-[#444748]">
+                  <p className="font-serif italic text-base sm:text-lg text-[#444748]">
                     Applying for: {currentApp.position}
                   </p>
 
-                  <div className="flex flex-wrap gap-6 pt-2 text-sm">
+                  <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-6 pt-2 text-sm">
                     {currentApp.email && (
                       <a
                         href={`mailto:${currentApp.email}`}
-                        className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps"
+                        className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps truncate"
                       >
-                        <span className="material-symbols-outlined text-sm">mail</span>
-                        <span>{currentApp.email}</span>
+                        <span className="material-symbols-outlined text-sm shrink-0">mail</span>
+                        <span className="truncate">{currentApp.email}</span>
                       </a>
                     )}
                     {currentApp.portfolioUrl && (
@@ -292,10 +326,10 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
                         href={`https://${currentApp.portfolioUrl}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps"
+                        className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps truncate"
                       >
-                        <span className="material-symbols-outlined text-sm">language</span>
-                        <span>{currentApp.portfolioUrl}</span>
+                        <span className="material-symbols-outlined text-sm shrink-0">language</span>
+                        <span className="truncate">{currentApp.portfolioUrl}</span>
                       </a>
                     )}
                   </div>
@@ -303,49 +337,49 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
               </div>
 
               {/* Experience Summary */}
-              <div className="space-y-6">
-                <h4 className="label-caps text-[#000000] border-b border-[#747878]/20 pb-2 uppercase tracking-widest font-bold">
+              <div className="space-y-4 sm:space-y-6">
+                <h4 className="label-caps text-[#000000] border-b border-[#747878]/20 pb-2 uppercase tracking-widest font-bold text-xs sm:text-sm">
                   Experience Summary
                 </h4>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {currentApp.experienceSummary && currentApp.experienceSummary.length > 0 ? (
                     currentApp.experienceSummary.map((exp, idx) => (
                       <div key={idx} className="space-y-1">
-                        <h5 className="font-semibold text-lg text-[#000000]">
+                        <h5 className="font-semibold text-base sm:text-lg text-[#000000]">
                           {exp.role} - {exp.company}
                         </h5>
-                        <p className="text-sm text-[#444748]">{exp.period}</p>
+                        <p className="text-xs sm:text-sm text-[#444748]">{exp.period}</p>
                         {exp.description && (
-                          <p className="text-base text-[#191c1d] mt-2 leading-relaxed">
+                          <p className="text-sm sm:text-base text-[#191c1d] mt-2 leading-relaxed">
                             {exp.description}
                           </p>
                         )}
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-[#444748]">No prior experience detailed.</p>
+                    <p className="text-xs sm:text-sm text-[#444748]">No prior experience detailed.</p>
                   )}
                 </div>
               </div>
 
               {/* Attachments */}
-              <div className="space-y-6">
-                <h4 className="label-caps text-[#000000] border-b border-[#747878]/20 pb-2 uppercase tracking-widest font-bold">
+              <div className="space-y-4 sm:space-y-6">
+                <h4 className="label-caps text-[#000000] border-b border-[#747878]/20 pb-2 uppercase tracking-widest font-bold text-xs sm:text-sm">
                   Attachments
                 </h4>
 
-                <div className="flex flex-wrap gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {currentApp.attachments && currentApp.attachments.map((att, idx) => (
                     <a
                       key={idx}
                       href={att.url}
-                      className="flex items-center gap-3 px-6 py-4 border border-[#747878]/20 hover:border-[#a33e00] hover:text-[#a33e00] transition-colors bg-white group"
+                      className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4 border border-[#747878]/20 hover:border-[#a33e00] hover:text-[#a33e00] transition-colors bg-white group overflow-hidden"
                     >
-                      <span className="material-symbols-outlined group-hover:text-[#a33e00]">
+                      <span className="material-symbols-outlined group-hover:text-[#a33e00] shrink-0">
                         description
                       </span>
-                      <span className="label-caps text-[#000000] group-hover:text-[#a33e00]">
+                      <span className="label-caps text-xs sm:text-sm text-[#000000] group-hover:text-[#a33e00] truncate">
                         {att.name}
                       </span>
                     </a>
@@ -355,12 +389,12 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
 
               {/* Internal Notes */}
               <div className="space-y-4">
-                <h4 className="label-caps text-[#000000] border-b border-[#747878]/20 pb-2 uppercase tracking-widest font-bold">
+                <h4 className="label-caps text-[#000000] border-b border-[#747878]/20 pb-2 uppercase tracking-widest font-bold text-xs sm:text-sm">
                   Internal Notes
                 </h4>
 
                 {currentApp.notes && (
-                  <div className="p-4 bg-[#f3f4f5] border border-[#747878]/15 text-sm text-[#191c1d] whitespace-pre-wrap font-sans">
+                  <div className="p-4 bg-[#f3f4f5] border border-[#747878]/15 text-xs sm:text-sm text-[#191c1d] whitespace-pre-wrap font-sans">
                     {currentApp.notes}
                   </div>
                 )}
@@ -371,11 +405,11 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
                     value={noteText}
                     onChange={(e) => setNoteText(e.target.value)}
                     placeholder="Add an internal reviewer note..."
-                    className="w-full bg-[#f8f9fa] border-b border-[#747878]/30 border-t-0 border-x-0 focus:ring-0 focus:border-[#000000] text-sm p-4 resize-none"
+                    className="w-full bg-[#f8f9fa] border-b border-[#747878]/30 border-t-0 border-x-0 focus:ring-0 focus:border-[#000000] text-xs sm:text-sm p-3 sm:p-4 resize-none pb-12"
                   />
                   <button
                     onClick={handleSaveNote}
-                    className="absolute bottom-4 right-4 label-caps text-[#a33e00] hover:text-[#000000] transition-colors uppercase font-bold"
+                    className="absolute bottom-3 right-3 label-caps text-[#a33e00] hover:text-[#000000] transition-colors uppercase font-bold text-xs"
                   >
                     Save Note
                   </button>
@@ -383,42 +417,40 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 pt-8 border-t border-[#747878]/15">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-[#747878]/15">
                 <button
                   onClick={() => handleStatusChange('Interview')}
-                  className="bg-[#000000] text-white px-8 py-4 label-caps uppercase hover:bg-[#a33e00] transition-colors"
+                  className="bg-[#000000] text-white px-6 py-3.5 label-caps uppercase hover:bg-[#a33e00] transition-colors text-xs text-center font-bold"
                 >
                   Move to Interview
                 </button>
 
                 <button
                   onClick={() => handleStatusChange('Rejected')}
-                  className="border border-[#000000] text-[#000000] px-8 py-4 label-caps uppercase hover:bg-[#ffdad6] hover:text-[#ba1a1a] hover:border-[#ba1a1a] transition-colors"
+                  className="border border-[#000000] text-[#000000] px-6 py-3.5 label-caps uppercase hover:bg-[#ffdad6] hover:text-[#ba1a1a] hover:border-[#ba1a1a] transition-colors text-xs text-center font-bold"
                 >
                   Reject
                 </button>
 
                 <button
                   onClick={() => handleStatusChange('Hired')}
-                  className="border border-[#000000] text-[#000000] px-8 py-4 label-caps uppercase hover:bg-emerald-50 hover:text-emerald-800 transition-colors"
+                  className="border border-[#000000] text-[#000000] px-6 py-3.5 label-caps uppercase hover:bg-emerald-50 hover:text-emerald-800 transition-colors text-xs text-center font-bold"
                 >
                   Mark as Hired
                 </button>
 
-                <div className="flex-1"></div>
-
                 <button
                   onClick={() => alert(`Shared profile for ${currentApp.candidateName}`)}
-                  className="flex items-center gap-2 text-[#444748] hover:text-[#000000] transition-colors"
+                  className="flex items-center justify-center gap-2 border border-[#747878]/30 sm:border-0 py-3.5 sm:py-0 text-[#444748] hover:text-[#000000] transition-colors"
                 >
-                  <span className="material-symbols-outlined">share</span>
-                  <span className="label-caps uppercase">Share with Team</span>
+                  <span className="material-symbols-outlined text-base">share</span>
+                  <span className="label-caps uppercase text-xs font-bold">Share with Team</span>
                 </button>
               </div>
             </div>
           </section>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-[#747878] label-caps">
+          <div className="flex-1 flex items-center justify-center text-[#747878] label-caps p-8 text-center text-xs sm:text-sm">
             Select an application to review.
           </div>
         )}

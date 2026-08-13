@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 interface TopNavBarProps {
-  activeTab: 'portfolio' | 'studio' | 'careers' | 'contact' | 'admin';
-  onNavigate: (tab: 'portfolio' | 'studio' | 'careers' | 'contact' | 'admin') => void;
+  activeTab: 'portfolio' | 'about' | 'studio' | 'careers' | 'contact' | 'admin';
+  onNavigate: (tab: 'portfolio' | 'about' | 'careers' | 'contact' | 'admin') => void;
 }
 
 export const TopNavBar: React.FC<TopNavBarProps> = ({ activeTab, onNavigate }) => {
@@ -34,14 +34,14 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ activeTab, onNavigate }) =
             Portfolio
           </button>
           <button
-            onClick={() => onNavigate('studio')}
+            onClick={() => onNavigate('about')}
             className={`label-caps transition-colors duration-300 pb-1 ${
-              activeTab === 'studio'
+              activeTab === 'about' || activeTab === 'studio'
                 ? 'text-[#a33e00] border-b border-[#a33e00] font-semibold'
                 : 'text-[#444748] hover:text-[#a33e00]'
             }`}
           >
-            Studio
+            About Us
           </button>
           <button
             onClick={() => onNavigate('careers')}
@@ -103,14 +103,14 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ activeTab, onNavigate }) =
           </button>
           <button
             onClick={() => {
-              onNavigate('studio');
+              onNavigate('about');
               setMobileMenuOpen(false);
             }}
             className={`text-left label-caps py-2 ${
-              activeTab === 'studio' ? 'text-[#a33e00] font-semibold' : 'text-[#191c1d]'
+              activeTab === 'about' || activeTab === 'studio' ? 'text-[#a33e00] font-semibold' : 'text-[#191c1d]'
             }`}
           >
-            Studio
+            About Us
           </button>
           <button
             onClick={() => {

@@ -8,7 +8,7 @@ import { AdminLoginModal } from './components/AdminLoginModal';
 
 // Views
 import { PortfolioView } from './views/PortfolioView';
-import { StudioView } from './views/StudioView';
+import { AboutView } from './views/AboutView';
 import { CareersView } from './views/CareersView';
 import { ContactView } from './views/ContactView';
 
@@ -19,7 +19,7 @@ import { AdminJobs } from './views/admin/AdminJobs';
 import { AdminApplications } from './views/admin/AdminApplications';
 import { AdminSettings } from './views/admin/AdminSettings';
 
-type PublicTab = 'portfolio' | 'studio' | 'careers' | 'contact';
+type PublicTab = 'portfolio' | 'about' | 'studio' | 'careers' | 'contact';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<PublicTab>('portfolio');
@@ -267,7 +267,30 @@ export function App() {
         <div className="flex-1 flex flex-col md:flex-row min-h-screen">
           {/* Mobile Admin Bar */}
           <div className="md:hidden bg-[#000000] text-white p-4 flex justify-between items-center sticky top-0 z-50">
-            <span className="font-serif font-bold text-lg">Studio Admin</span>
+            <div className="flex items-center gap-3">
+              {adminView !== 'dashboard' && (
+                <button
+                  onClick={() => setAdminView('dashboard')}
+                  className="flex items-center gap-1 text-xs label-caps bg-white/10 hover:bg-[#a33e00] px-2.5 py-1.5 rounded transition-colors text-white font-medium"
+                  title="Back to Dashboard"
+                >
+                  <span className="material-symbols-outlined text-base">arrow_back</span>
+                  <span>Dashboard</span>
+                </button>
+              )}
+              <span className="font-serif font-bold text-base md:text-lg">
+                {adminView === 'dashboard'
+                  ? 'Studio Admin'
+                  : adminView === 'projects'
+                  ? 'Projects'
+                  : adminView === 'jobs'
+                  ? 'Job Postings'
+                  : adminView === 'applications'
+                  ? 'Applications'
+                  : 'Settings'}
+              </span>
+            </div>
+
             <button
               onClick={handleLogout}
               className="text-xs label-caps uppercase bg-white/10 px-3 py-1.5 rounded hover:bg-[#a33e00] transition-colors"
@@ -291,6 +314,7 @@ export function App() {
                 jobs={jobs}
                 applications={applications}
                 onNavigate={(v) => setAdminView(v)}
+                onExitAdmin={handleLogout}
               />
             )}
 
@@ -300,6 +324,7 @@ export function App() {
                 onAddProject={handleAddProject}
                 onUpdateProject={handleUpdateProject}
                 onDeleteProject={handleDeleteProject}
+                onNavigate={(v) => setAdminView(v)}
               />
             )}
 
@@ -314,6 +339,7 @@ export function App() {
                   setSelectedJobFilter(jobTitle);
                   setAdminView('applications');
                 }}
+                onNavigate={(v) => setAdminView(v)}
               />
             )}
 
@@ -324,6 +350,7 @@ export function App() {
                 selectedJobFilter={selectedJobFilter}
                 onClearJobFilter={() => setSelectedJobFilter(null)}
                 onUpdateApplication={handleUpdateApplication}
+                onNavigate={(v) => setAdminView(v)}
               />
             )}
 
@@ -331,6 +358,7 @@ export function App() {
               <AdminSettings
                 settings={settings}
                 onUpdateSettings={handleUpdateSettings}
+                onNavigate={(v) => setAdminView(v)}
               />
             )}
           </div>
@@ -345,8 +373,8 @@ export function App() {
               <PortfolioView projects={projects} onNavigate={handlePublicNavigate} />
             )}
 
-            {activeTab === 'studio' && (
-              <StudioView onNavigate={handlePublicNavigate} />
+            {(activeTab === 'about' || activeTab === 'studio') && (
+              <AboutView onNavigate={handlePublicNavigate} />
             )}
 
             {activeTab === 'careers' && (

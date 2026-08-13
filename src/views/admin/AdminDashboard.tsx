@@ -6,6 +6,7 @@ interface AdminDashboardProps {
   jobs: JobPosting[];
   applications: Application[];
   onNavigate: (view: 'dashboard' | 'projects' | 'jobs' | 'applications' | 'settings') => void;
+  onExitAdmin?: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -13,6 +14,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   jobs,
   applications,
   onNavigate,
+  onExitAdmin,
 }) => {
   const activeJobsCount = jobs.filter((j) => j.status === 'Active').length;
   const newAppsCount = applications.filter((a) => a.status === 'New' || a.status === 'Reviewing').length;
@@ -20,8 +22,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   return (
     <div className="p-6 md:p-12 space-y-12 max-w-[1440px] mx-auto">
       {/* Header */}
-      <header className="flex justify-between items-end border-b border-[#747878]/15 pb-8">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-[#747878]/15 pb-8 gap-4">
         <div>
+          {onExitAdmin && (
+            <button
+              type="button"
+              onClick={onExitAdmin}
+              className="md:hidden inline-flex items-center gap-1.5 text-xs label-caps font-bold text-[#a33e00] hover:text-[#000000] mb-3 transition-colors uppercase tracking-wider"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              <span>Back to Main Website</span>
+            </button>
+          )}
           <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#000000] tracking-tight">
             Dashboard
           </h2>
