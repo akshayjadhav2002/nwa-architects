@@ -249,7 +249,7 @@ export const initialSettings: StudioSettings = {
   profile: {
     name: 'NWA Architects',
     registrationNumber: 'AIA-49281-NY',
-    hqAddress: 'Flat no. 3, 76-Shrushti Prabhat, lane no.-15, near symbiosis School, Prabhat road, Pune - 411004',
+    hqAddress: 'Nilesh Waman & Associates Flat no. 3, 76-Shrushti Prabhat, Kashinath Shastri Abhyankar path, lane no.-15, near symbiosis School, Prabhat road, pune-411004',
     contactEmail: 'nwa.architects2002@gmail.com',
     phoneNumber: '+91 9850601673'
   },

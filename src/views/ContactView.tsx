@@ -62,11 +62,30 @@ export const ContactView: React.FC<ContactViewProps> = ({ onSubmitInquiry }) => 
             </h2>
             <div className="space-y-2">
               <h3 className="label-caps text-[#a33e00] uppercase">Pune HQ</h3>
-              <p className="text-base text-[#191c1d] leading-relaxed">
-                Flat no. 3, 76-Shrushti Prabhat, lane no.-15,<br />
-                near symbiosis School, Prabhat road,<br />
-                Pune-411004
-              </p>
+              <a
+                href="https://maps.google.com/?q=18.515333,73.830528"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block text-base text-[#191c1d] hover:text-[#a33e00] transition-colors leading-relaxed"
+                title="Open 18°30'55.2&quot;N 73°49'49.9&quot;E on Google Maps"
+              >
+                <span className="inline-flex items-start gap-1.5">
+                  <span>
+                    Nilesh Waman &amp; Associates<br />
+                    Flat no. 3, 76-Shrushti Prabhat,<br />
+                    Kashinath Shastri Abhyankar path, lane no.-15,<br />
+                    near symbiosis School, Prabhat road,<br />
+                    pune-411004
+                  </span>
+                  <span className="material-symbols-outlined text-base text-[#747878] group-hover:text-[#a33e00] transition-colors pt-0.5 shrink-0">
+                    open_in_new
+                  </span>
+                </span>
+              </a>
+              <div className="pt-1 flex items-center gap-1.5 text-xs text-[#747878] font-mono">
+                <span className="material-symbols-outlined text-sm text-[#a33e00]">location_on</span>
+                <span>18°30'55.2"N 73°49'49.9"E</span>
+              </div>
               <p className="text-base text-[#444748] pt-2 font-mono">
                 +91 9850601673, +91 8830910827
               </p>
@@ -198,6 +217,40 @@ export const ContactView: React.FC<ContactViewProps> = ({ onSubmitInquiry }) => 
               </button>
             </form>
           )}
+        </div>
+      </section>
+
+      {/* Embedded Location Map */}
+      <section className="w-full space-y-6 pt-4 border-t border-[#747878]/15">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="label-caps text-[#a33e00] font-bold uppercase tracking-widest block mb-1">
+              Location Map
+            </span>
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#000000]">
+              Find Our Pune Studio
+            </h2>
+          </div>
+          <a
+            href="https://maps.google.com/?q=18.515333,73.830528"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-[#000000] text-white hover:bg-[#a33e00] label-caps px-5 py-3 text-xs uppercase tracking-wider transition-colors w-fit"
+          >
+            <span className="material-symbols-outlined text-sm">directions</span>
+            <span>Get Directions in Google Maps</span>
+          </a>
+        </div>
+
+        <div className="w-full h-80 md:h-96 border border-[#747878]/20 bg-[#f3f4f5] overflow-hidden relative shadow-sm">
+          <iframe
+            title="NWA Architects Pune Studio Location"
+            src="https://maps.google.com/maps?q=18.515333,73.830528&hl=en&z=17&output=embed"
+            className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-500"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </section>
     </main>
