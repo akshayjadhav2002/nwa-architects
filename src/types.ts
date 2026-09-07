@@ -30,7 +30,7 @@ export interface Application {
   status: 'Reviewing' | 'New' | 'Rejected' | 'Interview' | 'Hired';
   email: string;
   portfolioUrl: string;
-  avatarUrl: string;
+  avatarUrl?: string;
   experienceSummary: Array<{
     role: string;
     company: string;

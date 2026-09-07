@@ -107,7 +107,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({ projects, onNaviga
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-5"
             >
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#a33e00] rounded-full animate-pulse" />

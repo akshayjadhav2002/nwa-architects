@@ -296,42 +296,55 @@ export const AdminApplications: React.FC<AdminApplicationsProps> = ({
               </button>
 
               {/* Profile Header */}
-              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
-                <img
-                  src={currentApp.avatarUrl}
-                  alt={currentApp.candidateName}
-                  className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-sm grayscale border border-[#747878]/20 shrink-0"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="flex-1 space-y-2 min-w-0">
+              <div className="space-y-3 pb-6 border-b border-[#747878]/15">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#000000] break-words">
                     {currentApp.candidateName}
                   </h2>
-                  <p className="font-serif italic text-base sm:text-lg text-[#444748]">
-                    Applying for: {currentApp.position}
-                  </p>
+                  <span
+                    className={`text-xs uppercase font-bold px-3 py-1 rounded label-caps ${
+                      currentApp.status === 'Reviewing'
+                        ? 'bg-[#a33e00]/10 text-[#a33e00]'
+                        : currentApp.status === 'New'
+                        ? 'bg-[#e1e3e4] text-[#000000]'
+                        : currentApp.status === 'Interview'
+                        ? 'bg-blue-100 text-blue-800'
+                        : currentApp.status === 'Hired'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-[#ffdad6] text-[#ba1a1a]'
+                    }`}
+                  >
+                    {currentApp.status}
+                  </span>
+                </div>
+                <p className="font-serif italic text-base sm:text-lg text-[#444748]">
+                  Applying for: {currentApp.position}
+                </p>
 
-                  <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-6 pt-2 text-sm">
-                    {currentApp.email && (
-                      <a
-                        href={`mailto:${currentApp.email}`}
-                        className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps truncate"
-                      >
-                        <span className="material-symbols-outlined text-sm shrink-0">mail</span>
-                        <span className="truncate">{currentApp.email}</span>
-                      </a>
-                    )}
-                    {currentApp.portfolioUrl && (
-                      <a
-                        href={`https://${currentApp.portfolioUrl}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps truncate"
-                      >
-                        <span className="material-symbols-outlined text-sm shrink-0">language</span>
-                        <span className="truncate">{currentApp.portfolioUrl}</span>
-                      </a>
-                    )}
+                <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-6 pt-1 text-sm">
+                  {currentApp.email && (
+                    <a
+                      href={`mailto:${currentApp.email}`}
+                      className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps truncate"
+                    >
+                      <span className="material-symbols-outlined text-sm shrink-0">mail</span>
+                      <span className="truncate">{currentApp.email}</span>
+                    </a>
+                  )}
+                  {currentApp.portfolioUrl && (
+                    <a
+                      href={`https://${currentApp.portfolioUrl}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 text-[#444748] hover:text-[#a33e00] transition-colors label-caps truncate"
+                    >
+                      <span className="material-symbols-outlined text-sm shrink-0">language</span>
+                      <span className="truncate">{currentApp.portfolioUrl}</span>
+                    </a>
+                  )}
+                  <div className="flex items-center gap-2 text-[#747878] label-caps text-xs">
+                    <span className="material-symbols-outlined text-sm shrink-0">calendar_today</span>
+                    <span>Applied: {currentApp.appliedDate}</span>
                   </div>
                 </div>
               </div>

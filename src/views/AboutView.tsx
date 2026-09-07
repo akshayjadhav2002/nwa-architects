@@ -10,6 +10,14 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate }) => {
       {/* Hero / Intro Header */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start border-b border-[#747878]/15 pb-16">
         <div className="md:col-span-5">
+          <div className="mb-5 inline-block bg-white p-2 border border-[#747878]/20 shadow-sm">
+            <img
+              src="/assets/nwaaritects_logo.jpg"
+              alt="NWA Architects Logo"
+              className="h-12 md:h-14 w-auto object-contain"
+              referrerPolicy="no-referrer"
+            />
+          </div>
           <span className="label-caps text-[#a33e00] font-bold uppercase tracking-widest block mb-3">
             Since 2002
           </span>

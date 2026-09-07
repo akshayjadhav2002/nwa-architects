@@ -228,7 +228,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onSubmitInquiry }) => 
               Location Map
             </span>
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#000000]">
-              Find Our Pune Studio
+              Find Our Pune Office
             </h2>
           </div>
           <a
@@ -244,9 +244,9 @@ export const ContactView: React.FC<ContactViewProps> = ({ onSubmitInquiry }) => 
 
         <div className="w-full h-80 md:h-96 border border-[#747878]/20 bg-[#f3f4f5] overflow-hidden relative shadow-sm">
           <iframe
-            title="NWA Architects Pune Studio Location"
+            title="NWA Architects Pune Office Location"
             src="https://maps.google.com/maps?q=18.515333,73.830528&hl=en&z=17&output=embed"
-            className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-500"
+            className="w-full h-full border-0"
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

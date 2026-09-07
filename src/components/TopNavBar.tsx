@@ -16,6 +16,12 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ activeTab, onNavigate }) =
           onClick={() => onNavigate('portfolio')}
           className="text-left focus:outline-none flex items-center gap-3 group"
         >
+          <img
+            src="/assets/nwaaritects_logo.jpg"
+            alt="NWA Architects Logo"
+            className="h-9 w-auto object-contain bg-white border border-[#747878]/20 p-0.5 shadow-xs"
+            referrerPolicy="no-referrer"
+          />
           <div className="font-serif text-2xl font-bold tracking-tight text-[#000000] group-hover:text-[#a33e00] transition-colors">
             NWA Architects
           </div>
